@@ -15,7 +15,7 @@ def p_object(p):
 def p_objectValue(p):
 	'''objectValue	: 
 					| STRING IS value
-					| objectValue NEXT STRING IS value'''
+					| objectValue NEXTOBJECT STRING IS value'''
 	p[0] = {}
 	if len(p) == 4:
 		p[0][p[1]] = p[3]
@@ -34,7 +34,8 @@ def p_array(p):
 def p_arrayValue(p):
 	'''arrayValue	: 
 					| value
-					| arrayValue NEXT value'''
+					| arrayValue AND value
+					| arrayValue ALSO value'''
 	p[0] = []
 	if len(p) == 2:
 		p[0].append(p[1])
@@ -50,9 +51,9 @@ def p_value(p):
 				| NUMBER
 				| object
 				| array
-				| NOTFALSE
-				| NOTTRUE
-				| NULLISH'''
+				| YES
+				| NO
+				| EMPTY'''
 	p[0] = p[1]
 #value	: STRING
 #		| NUMBER
@@ -76,9 +77,11 @@ def printParse(input):
 if __name__ == '__main__':
 	import json
 
-	printParse('such "foo" is "bar" wow')
+	printParse('such "foo" is "bar". "doge" is "shibe" wow')
 	print ''
-	printParse('such "foo" is so "bar" next "baz" next "fizzbuzz" many wow')
+	printParse('such "foo" is such "shiba" is "inu", "doge" is yes wow wow')
+	print ''
+	printParse('such "foo" is so "bar" also "baz" and "fizzbuzz" many wow')
 	print ''
 	printParse('such "foo" is 42very3 wow')
 

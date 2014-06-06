@@ -10,21 +10,25 @@ import re
 reserved = {
   'such':'SUCH',
   'is':'IS',
-  'next':'NEXT',
   'wow':'WOW',
   'so':'SO',
   'many':'MANY',
-  'notfalse':'NOTFALSE',
-  'nottrue':'NOTTRUE',
-  'nullish':'NULLISH',
+  'yes':'YES',
+  'no':'NO',
+  'empty':'EMPTY',
   'very':'VERY',
+  'and':'AND',
+  'also':'ALSO',
 }
 
 tokens = [
   'STRING',
   'NUMBER',
+  'NEXTOBJECT',
   'IDENT'
   ] + list(reserved.values())
+
+t_NEXTOBJECT = r'[,.!?]'
 
 def t_STRING(t):
   r'("(\\"|[^"])*")|(\'(\\\'|[^\'])*\')'
@@ -41,11 +45,11 @@ def t_NUMBER(t):
 def t_IDEN(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'IDENT')    # Check for reserved words
-    if t.type == 'NOTFALSE':
+    if t.type == 'YES':
       t.value = True
-    elif t.type == 'NOTTRUE':
+    elif t.type == 'NO':
       t.value = False
-    elif t.type == 'NULLISH':
+    elif t.type == 'EMPTY':
       t.value = None
     return t
 
@@ -73,6 +77,10 @@ def printTokens(input):
 
 if __name__ == "__main__":
 
-  printTokens('such "foo" is so "bar" next "baz" next "fizzbuzz" many wow')
+  printTokens('such "foo" is "bar". "doge" is "shibe" wow')
+  print ''
+  printTokens('such "foo" is such "shiba" is "inu", "doge" is yes wow wow')
+  print ''
+  printTokens('such "foo" is so "bar" also "baz" and "fizzbuzz" many wow')
   print ''
   printTokens('such "foo" is 42very3 wow')
